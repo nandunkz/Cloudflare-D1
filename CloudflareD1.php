@@ -96,6 +96,8 @@ class CloudflareD1
     }
 
     public static function orderBy($column, $direction = 'ASC') {
+        $valid = ['ASC', 'DESC'];
+        $direction = in_array($direction, $valid) ? $direction : 'ASC';
         self::$query .= " ORDER BY $column $direction";
         return new static;
     }
@@ -106,16 +108,25 @@ class CloudflareD1
     }
 
     public static function limit($number) {
+        if (!is_numeric($number) || $number <= 0) {
+            $number = 1000;
+        }
         self::$query .= " LIMIT $number";
         return new static;
     }
 
     public static function offset($number) {
+        if (!is_numeric($number) || $number <= 0) {
+            $number = 0;
+        }
         self::$query .= " OFFSET $number";
         return new static;
     }
 
     public static function insert($data) {
+        if (!is_array($data)) {
+            return false;
+        }
         $columns = implode(', ', array_keys($data));
         $values = implode(', ', array_map(fn($value) => "'$value'", array_values($data)));
         $query = "INSERT INTO " . self::$table . " ($columns) VALUES ($values)";
@@ -123,6 +134,9 @@ class CloudflareD1
     }
 
     public static function update($data) {
+        if (!is_array($data)) {
+            return false;
+        }
         $set = implode(', ', array_map(fn($key, $value) => "$key = '$value'", array_keys($data), array_values($data)));
         self::$query = "UPDATE " . self::$table . " SET $set";
         return new static;
