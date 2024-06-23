@@ -290,4 +290,65 @@ class CloudflareD1
     public static function first() {
         return self::executeQuery(self::$query . " LIMIT 1")[0] ?? null;
     }
+
+    /**
+     * Create a new table.
+     *
+     * @param string $tableName The name of the table to create
+     * @param array $columns The columns of the table
+     * @return array The query result
+     */
+    public static function createTable($tableName, $columns) {
+        $columnsDefinition = implode(', ', $columns);
+        $query = "CREATE TABLE $tableName ($columnsDefinition)";
+        return self::executeQuery($query);
+    }
+
+    /**
+     * Drop an existing table.
+     *
+     * @param string $tableName The name of the table to drop
+     * @return array The query result
+     */
+    public static function dropTable($tableName) {
+        $query = "DROP TABLE $tableName";
+        return self::executeQuery($query);
+    }
+
+    /**
+     * Add a new column to an existing table.
+     *
+     * @param string $tableName The name of the table
+     * @param string $columnDefinition The column definition
+     * @return array The query result
+     */
+    public static function addColumn($tableName, $columnDefinition) {
+        $query = "ALTER TABLE $tableName ADD $columnDefinition";
+        return self::executeQuery($query);
+    }
+
+    /**
+     * Update an existing column in a table.
+     *
+     * @param string $tableName The name of the table
+     * @param string $oldColumnName The name of the column to update
+     * @param string $newColumnDefinition The new column definition
+     * @return array The query result
+     */
+    public static function updateColumn($tableName, $oldColumnName, $newColumnDefinition) {
+        $query = "ALTER TABLE $tableName CHANGE $oldColumnName $newColumnDefinition";
+        return self::executeQuery($query);
+    }
+
+    /**
+     * Drop a column from an existing table.
+     *
+     * @param string $tableName The name of the table
+     * @param string $columnName The name of the column to drop
+     * @return array The query result
+     */
+    public static function dropColumn($tableName, $columnName) {
+        $query = "ALTER TABLE $tableName DROP COLUMN $columnName";
+        return self::executeQuery($query);
+    }
 }
