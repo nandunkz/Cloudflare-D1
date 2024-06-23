@@ -75,7 +75,20 @@ class CloudflareD1
         curl_close($curl);
         
         $data = json_decode($response, true);
-        return $data['result'][0]['results'] ?? [];
+        if (isset($data['success']) && $data['success'] === false) {
+            $errors = $data['errors'];
+            $errorMessage = '';
+            foreach ($errors as $error) {
+                $errorMessage .= $error['message'] . "\n";
+            }
+            return $errorMessage;
+        }
+        if (isset($data['result'][0]['results']) && count($data['result'][0]['results']) > 0) {
+            return $data['result'][0]['results'];
+        } else if (isset($data['result'][0]['results']) && count($data['result'][0]['results']) === 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
