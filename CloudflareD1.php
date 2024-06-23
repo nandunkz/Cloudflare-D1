@@ -10,6 +10,7 @@
  * @link https://developers.cloudflare.com/d1/db/sql/ Cloudflare D1 API documentation
  */
 namespace App\Helpers;
+use Illuminate\Support\Facades\Log;
 
 class CloudflareD1
 {
@@ -81,7 +82,8 @@ class CloudflareD1
             foreach ($errors as $error) {
                 $errorMessage .= $error['message'] . "\n";
             }
-            return $errorMessage;
+            Log::error($errorMessage);
+            return false;
         }
         if (isset($data['result'][0]['results']) && count($data['result'][0]['results']) > 0) {
             return $data['result'][0]['results'];
