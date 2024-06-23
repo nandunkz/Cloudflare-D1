@@ -30,30 +30,33 @@ Pastikan Anda telah mengatur .env berikut:
 use App\Helpers\CloudflareD1;
 // Memilih tabel
 $results = CloudflareD1::table('users')
-->select(['id', 'name', 'email'])
-->where('status', '=', 'active')
-->orderBy('name')
-->limit(10)
-->get();
+    ->select(['id', 'name', 'email'])
+    ->where('status', '=', 'active')
+    ->orderBy('name')
+    ->limit(10)
+    ->get();
 print_r($results);
+
 // Menyisipkan data
 $insertResult = CloudflareD1::table('users')
-->insert([
-'name' => 'John Doe',
-'email' => 'john.doe@example.com',
-'status' => 'active'
-]);
+    ->insert([
+    'name' => 'John Doe',
+    'email' => 'john.doe@example.com',
+    'status' => 'active'
+    ]);
 print_r($insertResult);
+
 // Memperbarui data
 $updateResult = CloudflareD1::table('users')
-->where('id', '=', 1)
-->update([
-'email' => 'new.email@example.com'
-]);
+    ->where('id', '=', 1)
+    ->update([
+    'email' => 'new.email@example.com'
+    ]);
 print_r($updateResult);
+
 // Menghapus data
 $deleteResult = CloudflareD1::table('users')
-->where('id', '=', 1)
-->delete();
+    ->where('id', '=', 1)
+    ->delete();
 print_r($deleteResult);
 ```
